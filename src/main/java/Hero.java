@@ -3,19 +3,10 @@ import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 
-public class Hero {
-    private Position position;
+public class Hero extends Element{
 
     public Hero(int x, int y) {
-        this.position = new Position(x, y);
-    }
-
-    public void setPosition(Position position) {
-        this.position = position;
-    }
-
-    public Position getPosition() {
-        return position;
+        super(x, y);
     }
 
     public Position moveUp() {
