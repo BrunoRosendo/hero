@@ -14,11 +14,12 @@ import static com.googlecode.lanterna.input.KeyType.ArrowUp;
 
 public class Game {
     private Screen screen;
-    private Hero hero;
+    private Arena arena;
 
     public Game() {
         try {
-            this.hero = new Hero(10, 10);
+            Hero hero = new Hero(10, 10);
+            this.arena = new Arena(20, 40, hero);
 
             TerminalSize terminalSize = new TerminalSize(40, 20);
             DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory()
@@ -34,35 +35,17 @@ public class Game {
         }
     }
 
-    private void moveHero(Position position) {
-        this.hero.setPosition(position);
-    }
-
     private void processKey(KeyStroke key) throws IOException {
-        switch (key.getKeyType()) {
-            case ArrowUp:
-                this.moveHero(this.hero.moveUp());
-                break;
-            case ArrowDown:
-                this.moveHero(this.hero.moveDown());
-                break;
-            case ArrowLeft:
-                this.moveHero(this.hero.moveLeft());
-                break;
-            case ArrowRight:
-                this.moveHero(this.hero.moveRight());
-                break;
-            case Character:
-                if (key.getCharacter() == 'q') this.screen.close();
-                break;
-            default:
-                break;
+        if (key.getKeyType() == KeyType.Character && key.getCharacter() == 'q') {
+            this.screen.close();
+            return;
         }
+        arena.processKey(key);
     }
 
     private void draw() throws IOException{
         this.screen.clear();
-        this.hero.draw(this.screen);
+        this.arena.draw(this.screen);
         this.screen.refresh();
     }
 
