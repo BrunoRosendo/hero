@@ -6,18 +6,21 @@ import com.googlecode.lanterna.input.KeyStroke;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Arena {
     private int height;
     private int width;
     private Hero hero;
     private List<Wall> walls;
+    private List<Coin> coins;
 
     public Arena(int h, int w, Hero hero) {
         this.height = h;
         this.width = w;
         this.hero = hero;
         this.walls = this.createWalls();
+        this.coins = this.createCoins();
     }
 
     private List<Wall> createWalls() {
@@ -34,6 +37,25 @@ public class Arena {
         }
 
         return walls;
+    }
+
+    private List<Coin> createCoins() {
+        Random random = new Random();
+        ArrayList<Coin> coins = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            Coin newCoin = new Coin(random.nextInt(width - 2) + 1, random.nextInt(height - 2) + 1);
+
+            while (true) {
+                boolean repeated = false;
+                for (Coin coin : coins)
+                    if (coin.position.equals(newCoin.position)) repeated = true;
+                if (!repeated && !newCoin.position.equals(this.hero.position)) break;
+                newCoin = new Coin(random.nextInt(width - 2) + 1, random.nextInt(height - 2) + 1);
+            }
+
+            coins.add(newCoin);
+        }
+        return coins;
     }
 
 
@@ -66,9 +88,18 @@ public class Arena {
         return true;
     }
 
+    private void retrieveCoins() {
+        for (Coin coin : coins)
+            if (coin.position.equals(this.hero.position)) {
+                coins.remove(coin);
+                return;
+            }
+    }
+
     public void moveHero(Position position) {
         if (this.canHeroMove(position))
             hero.setPosition(position);
+        retrieveCoins();
     }
 
     public void draw(TextGraphics graphics) {
@@ -76,6 +107,7 @@ public class Arena {
         graphics.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(width, height), ' ');
 
         for (Wall wall : walls)  wall.draw(graphics);
+        for (Coin coin : coins) coin.draw(graphics);
         this.hero.draw(graphics);
     }
 }
