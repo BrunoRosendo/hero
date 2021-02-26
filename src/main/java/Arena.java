@@ -14,6 +14,7 @@ public class Arena {
     private Hero hero;
     private List<Wall> walls;
     private List<Coin> coins;
+    private List<Monster> monsters;
 
     public Arena(int h, int w, Hero hero) {
         this.height = h;
@@ -21,6 +22,7 @@ public class Arena {
         this.hero = hero;
         this.walls = this.createWalls();
         this.coins = this.createCoins();
+        this.monsters = this.createMonsters();
     }
 
     private List<Wall> createWalls() {
@@ -58,6 +60,15 @@ public class Arena {
         return coins;
     }
 
+    private List<Monster> createMonsters() {
+        List<Monster> newMonsters = new ArrayList<>();
+        newMonsters.add(new Monster(5, 5));
+        newMonsters.add(new Monster(20, 2));
+        newMonsters.add(new Monster(15, 15));
+        newMonsters.add(new Monster(14, 9));
+        newMonsters.add(new Monster(2, 15));
+        return newMonsters;
+    }
 
     public void processKey(KeyStroke key) {
         switch (key.getKeyType()) {
@@ -108,6 +119,7 @@ public class Arena {
 
         for (Wall wall : walls)  wall.draw(graphics);
         for (Coin coin : coins) coin.draw(graphics);
+        for (Monster monster : monsters) monster.draw(graphics);
         this.hero.draw(graphics);
     }
 }
