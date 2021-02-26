@@ -45,7 +45,7 @@ public class Game {
 
     private void draw() throws IOException{
         this.screen.clear();
-        this.arena.draw(this.screen);
+        this.arena.draw(this.screen.newTextGraphics());
         this.screen.refresh();
     }
 
