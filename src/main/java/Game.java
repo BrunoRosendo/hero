@@ -37,6 +37,11 @@ public class Game {
             return;
         }
         arena.processKey(key);
+        if (arena.verifyMonsterCollisions()) { // we don't need to check twice because the monster always chases the hero
+            this.screen.close();
+            System.out.println("You died! :(");
+            return;
+        }
     }
 
     private void draw() throws IOException{

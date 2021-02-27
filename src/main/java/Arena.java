@@ -62,11 +62,22 @@ public class Arena {
 
     private List<Monster> createMonsters() {
         List<Monster> newMonsters = new ArrayList<>();
-        newMonsters.add(new Monster(5, 5));
-        newMonsters.add(new Monster(20, 2));
-        newMonsters.add(new Monster(15, 15));
-        newMonsters.add(new Monster(14, 9));
-        newMonsters.add(new Monster(2, 15));
+        Random random = new Random();
+        for (int i = 0; i < 5; i++) {
+            Monster newMonster = new Monster(random.nextInt(width - 2) + 1, random.nextInt(height - 2) + 1);
+
+            while (true) {
+                boolean repeated = false;
+                for (Coin coin : coins)
+                    if (coin.position.equals(newMonster.position)) repeated = true;
+                for (Monster monster : newMonsters)
+                    if (monster.position.equals(newMonster.position)) repeated = true;
+                if (!repeated && !newMonster.position.equals(this.hero.position)) break;
+                newMonster = new Monster(random.nextInt(width - 2) + 1, random.nextInt(height - 2) + 1);
+            }
+
+            newMonsters.add(newMonster);
+        }
         return newMonsters;
     }
 
@@ -87,6 +98,12 @@ public class Arena {
             default:
                 break;
         }
+        this.moveMonsters();
+    }
+
+    private void moveMonsters() {
+        for (Monster monster : monsters)
+            monster.setPosition(monster.move(this.hero.position));
     }
 
     private boolean canHeroMove(Position position) {
@@ -111,6 +128,12 @@ public class Arena {
         if (this.canHeroMove(position))
             hero.setPosition(position);
         retrieveCoins();
+    }
+
+    public boolean verifyMonsterCollisions() {
+        for (Monster monster : monsters)
+            if (monster.getPosition().equals(this.hero.getPosition())) return true;
+        return false;
     }
 
     public void draw(TextGraphics graphics) {
