@@ -1,3 +1,5 @@
+package com.hero.utils;
+
 public class Position {
     private int x;
     private int y;

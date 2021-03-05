@@ -1,4 +1,7 @@
+package com.hero.element;
+
 import com.googlecode.lanterna.graphics.TextGraphics;
+import com.hero.utils.Position;
 
 public abstract class Element {
     protected Position position;

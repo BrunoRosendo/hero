@@ -1,12 +1,25 @@
+package com.hero.element;
+
 import com.googlecode.lanterna.SGR;
 import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
+import com.hero.utils.Position;
 
 public class Hero extends Element{
+    private int energy;
 
     public Hero(int x, int y) {
         super(x, y);
+        energy = 5;
+    }
+
+    public int getEnergy() {
+        return energy;
+    }
+
+    public void setEnergy(int energy) {
+        this.energy = energy;
     }
 
     public Position moveUp() {
@@ -29,5 +42,6 @@ public class Hero extends Element{
         graphics.setForegroundColor(TextColor.Factory.fromString("#FFFF33"));
         graphics.enableModifiers(SGR.BOLD);
         graphics.putString(new TerminalPosition(position.getX(), position.getY()), "X");
+        graphics.putString(new TerminalPosition(position.getX(), position.getY() + 1), String.valueOf(this.energy));
     }
 }
