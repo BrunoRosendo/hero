@@ -8,10 +8,20 @@ import com.hero.utils.Position;
 
 public class Hero extends Element{
     private int energy;
+    private int score;
 
     public Hero(int x, int y) {
         super(x, y);
-        energy = 5;
+        this.energy = 5;
+        this.score = 0;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 
     public int getEnergy() {
@@ -43,5 +53,6 @@ public class Hero extends Element{
         graphics.enableModifiers(SGR.BOLD);
         graphics.putString(new TerminalPosition(position.getX(), position.getY()), "X");
         graphics.putString(new TerminalPosition(position.getX(), position.getY() + 1), String.valueOf(this.energy));
+        graphics.putString(new TerminalPosition(0, 0), String.valueOf(this.score));
     }
 }

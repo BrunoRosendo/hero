@@ -19,20 +19,38 @@ import com.hero.utils.Position;
 public class Arena {
     private int height;
     private int width;
+    private boolean over;
     private Hero hero;
     private List<Wall> walls;
     private List<Coin> coins;
     private List<Monster> monsters;
+    private Door door;
 
-    public Arena(String file, Hero hero, int numCoins, int numMonsters) throws FileNotFoundException {
+    public Arena(String file, Hero hero) throws FileNotFoundException {
+        this.hero = hero;
+        loadLevel(file);
+    }
+
+    public void loadLevel(String file) throws FileNotFoundException {
         File obj = new File(file);
         Scanner scanner = new Scanner(obj);
-        this.height = scanner.nextInt();
+        this.over = false;
         this.width = scanner.nextInt();
-        this.hero = hero;
+        this.height = scanner.nextInt();
+        this.door = new Door(scanner.nextInt(), scanner.nextInt(), scanner.nextInt(), scanner.nextInt());
         this.walls = this.createWalls();
-        this.coins = this.createCoins(numCoins);
-        this.monsters = this.createMonsters(numMonsters);
+        this.coins = this.createCoins(scanner.nextInt());
+        this.monsters = this.createMonsters(scanner.nextInt());
+        this.hero.setPosition(new Position(10, 10));
+    }
+
+    public void restart() {
+        this.hero.setScore(0);
+        this.hero.setEnergy(5);
+    }
+
+    public boolean isOver() {
+        return this.over;
     }
 
     private List<Wall> createWalls() {
@@ -124,6 +142,7 @@ public class Arena {
     }
 
     private boolean canHeroMove(Position position) {
+        if (door.isOpen() && door.collides(position)) return true;
         if (position.getX() >= this.width || position.getY() >= this.height
            || position.getX() < 0 || position.getY() < 0) return false;
 
@@ -137,14 +156,18 @@ public class Arena {
         for (Coin coin : coins)
             if (coin.getPosition().equals(this.hero.getPosition())) {
                 coins.remove(coin);
+                this.hero.setScore(this.hero.getScore() + 1);
                 return;
             }
     }
 
     public void moveHero(Position position) {
-        if (this.canHeroMove(position))
+        if (this.canHeroMove(position)) {
             hero.setPosition(position);
+            if (door.collides(position)) this.over = true;
+        }
         retrieveCoins();
+        if (!door.isOpen() && coins.isEmpty()) door.openDoor();
     }
 
     public boolean verifyMonsterCollisions() {
@@ -163,6 +186,7 @@ public class Arena {
         graphics.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(width, height), ' ');
 
         for (Wall wall : walls)  wall.draw(graphics);
+        door.draw(graphics);
         for (Coin coin : coins) coin.draw(graphics);
         for (Monster monster : monsters) monster.draw(graphics);
         this.hero.draw(graphics);
