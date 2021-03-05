@@ -88,10 +88,10 @@ public class Game {
         this.screen.newTextGraphics().setForegroundColor(TextColor.Factory.fromString("#FFFF33"));
         this.screen.newTextGraphics().enableModifiers(SGR.BOLD);
         if (won)
-            this.screen.newTextGraphics().putString(new TerminalPosition(10, 10), "Congrats! You Won");
+            this.screen.newTextGraphics().putString(new TerminalPosition(10, 10), "Congrats! You Won :D");
         else
-            this.screen.newTextGraphics().putString(new TerminalPosition(10, 10), "You died! :(");
-        this.screen.newTextGraphics().putString(new TerminalPosition(10, 11), "Type 'r' to restart and 'q' to quit");
+            this.screen.newTextGraphics().putString(new TerminalPosition(13, 10), "You died! :(");
+        this.screen.newTextGraphics().putString(new TerminalPosition(2, 11), "Type 'r' to restart and 'q' to quit");
         this.screen.refresh();
         while (true) {
             KeyStroke key = screen.readInput();
